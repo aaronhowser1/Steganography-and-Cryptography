@@ -52,10 +52,7 @@ fun hide() {
         }
     } catch (e: Exception) {
         println("Can't read input file!")
-        return
     }
-
-
 }
 
 fun show() {
