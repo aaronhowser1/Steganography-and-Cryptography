@@ -3,6 +3,7 @@ package cryptography
 import java.io.File
 import javax.imageio.ImageIO
 
+
 fun main() {
     showMenu()
 }
@@ -25,7 +26,7 @@ fun showMenu() {
 
 fun hide() {
     println("Input image file:")
-//    val inputImage = readln()
+//    val inputImage = readln() //Example: C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test.png
     val inputImage = "C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test.png"
     println("Output image file:")
 //    val outputImage = readln()
@@ -35,8 +36,20 @@ fun hide() {
 
         for (i in 0 until bufferedImage.width) {
             for (j in 0 until bufferedImage.height) {
-                val pixelColor = bufferedImage.getRGB(i,j)
-                println(pixelColor)
+                val color = bufferedImage.getRGB(i,j)
+
+                //Creates a string of 0-11111111
+                var blue = (color and 0xff).toString(2)
+                var green = (color and 0xff00 shr 8).toString(2)
+                var red = (color and 0xff0000 shr 16).toString(2)
+
+                println("Old: $red $green $blue")
+
+                blue = changeLastBit(blue)
+                green = changeLastBit(green)
+                red = changeLastBit(red)
+
+                println("New: $red $green $blue")
             }
         }
 
@@ -50,4 +63,10 @@ fun hide() {
 
 fun show() {
     println("Obtaining message from image.")
+}
+
+fun changeLastBit(input: String): String {
+    val byte = input.toCharArray()
+    byte[byte.lastIndex] = '1'
+    return byte.concatToString()
 }
