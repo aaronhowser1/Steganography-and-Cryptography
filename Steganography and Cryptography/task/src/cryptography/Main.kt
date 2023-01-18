@@ -1,5 +1,6 @@
 package cryptography
 
+import java.awt.Color
 import java.io.File
 import javax.imageio.ImageIO
 
@@ -26,33 +27,29 @@ fun showMenu() {
 
 fun hide() {
     println("Input image file:")
-//    val inputImage = readln() //Example: C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test.png
-    val inputImage = "C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test.png"
+    //Example: C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test.png
+    val inputImageName = readln()
+    //Example: C:/Users/aaron/Documents/Programming Practice/Kotlin/Steganography and Cryptography/Steganography and Cryptography/task/src/cryptography/test2.png
     println("Output image file:")
-//    val outputImage = readln()
+    val outputImageName = readln()
 
     try {
-        val bufferedImage= ImageIO.read(File(inputImage))
+        val bufferedImage = ImageIO.read(File(inputImageName))
 
         for (i in 0 until bufferedImage.width) {
             for (j in 0 until bufferedImage.height) {
-                val color = bufferedImage.getRGB(i,j)
+                val color = Color(bufferedImage.getRGB(i,j))
 
-                //Creates a string of 0-11111111
-                var blue = (color and 0xff).toString(2)
-                var green = (color and 0xff00 shr 8).toString(2)
-                var red = (color and 0xff0000 shr 16).toString(2)
+                val rgb = Color(
+                    setLeastSignificantBitToOne(color.red),
+                    setLeastSignificantBitToOne(color.green),
+                    setLeastSignificantBitToOne(color.blue)
+                ).rgb
 
-                println("Old: $red $green $blue")
-
-                blue = changeLastBit(blue)
-                green = changeLastBit(green)
-                red = changeLastBit(red)
-
-                println("New: $red $green $blue")
+                bufferedImage.setRGB(i, j, rgb)
             }
+            ImageIO.write(bufferedImage, "png", File(outputImageName))
         }
-
     } catch (e: Exception) {
         println("Can't read input file!")
         return
@@ -65,8 +62,8 @@ fun show() {
     println("Obtaining message from image.")
 }
 
-fun changeLastBit(input: String): String {
-    val byte = input.toCharArray()
-    byte[byte.lastIndex] = '1'
-    return byte.concatToString()
+fun setLeastSignificantBitToOne(byte: Int): Int {
+    return if (byte % 2 == 0) {
+        byte + 1
+    } else byte
 }
