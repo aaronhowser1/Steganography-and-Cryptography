@@ -2,6 +2,7 @@ package cryptography
 
 import java.awt.Color
 import java.io.File
+import java.time.LocalDateTime
 import javax.imageio.ImageIO
 
 fun main() {
@@ -47,8 +48,14 @@ fun hide() {
 
                 bufferedImage.setRGB(i, j, rgb)
             }
-            ImageIO.write(bufferedImage, "png", File(outputImageName))
         }
+
+        println("""
+            Input Image: $inputImageName
+            Output Image: $outputImageName
+        """.trimIndent())
+        ImageIO.write(bufferedImage, "png", File(outputImageName))
+        println("Image $outputImageName is saved.")
     } catch (e: Exception) {
         println("Can't read input file!")
     }
