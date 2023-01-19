@@ -4,7 +4,6 @@ import java.awt.Color
 import java.io.File
 import javax.imageio.ImageIO
 
-
 fun main() {
     showMenu()
 }
